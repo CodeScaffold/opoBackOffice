@@ -3,17 +3,22 @@ import Router from "@koa/router";
 import cors from "@koa/cors";
 import { prisma } from "./src/database";
 import koaBody from "koa-body";
-import { DefaultArgs, GetFindResult } from "@prisma/client/runtime/library";
-import { Prisma } from "@prisma/client";
 import serve from "koa-static";
 import path from "path";
+import bodyParser from "koa-bodyparser";
+import passport from "koa-passport";
+import dotenv from "dotenv";
+import setupPassport from "./src/auth/passport";
+import routes from "./src/routes";
+
+dotenv.config();
 
 const app = new Koa();
 const router = new Router();
 
 // Serve static files from the 'public' directory
 app.use(serve(path.join(__dirname, "public")));
-
+setupPassport(app);
 app.use(
   koaBody({
     multipart: true,
@@ -24,25 +29,9 @@ app.use(
   }),
 );
 
-router.post("/login", async (ctx) => {
-  const { username, password } = ctx.request.body;
-  const users = [
-    { username: "arash", password: "password" },
-    // Add more users as needed
-  ];
-
-  const foundUser = users.find(
-    (user) => user.username === username && user.password === password,
-  );
-
-  if (foundUser) {
-    ctx.body = { success: true, message: "Login successful" };
-    ctx.status = 200;
-  } else {
-    ctx.status = 401;
-    ctx.body = { success: false, message: "Invalid username or password" };
-  }
-});
+app.use(bodyParser());
+require("./src/auth/passport"); // This will run the code in your passport.ts
+app.use(passport.initialize());
 
 // Define routes
 router.get("/", async (ctx) => {
@@ -50,21 +39,35 @@ router.get("/", async (ctx) => {
 });
 
 // Define a route for fetching results
+
 router.get("/result", async (ctx) => {
+  const page = parseInt(ctx.query.page as string) || 1;
+  const pageSize = parseInt(ctx.query.pageSize as string) || 10;
+  const skip = (page - 1) * pageSize;
   try {
-    const results = await prisma.result.findMany({
-      where: {
-        archivedAt: null,
-      },
-    });
-    ctx.body = results;
+    const [results, totalResultsCount] = await Promise.all([
+      prisma.result.findMany({
+        where: {
+          archivedAt: null,
+        },
+        skip: skip,
+        take: pageSize,
+        orderBy: [{ id: "desc" }],
+      }),
+      prisma.result.count({
+        where: {
+          archivedAt: null,
+        },
+      }),
+    ]);
+
+    ctx.body = { results, totalResultsCount };
   } catch (error) {
     console.error("Error fetching results:", error);
     ctx.status = 500;
     ctx.body = { error: "Failed to fetch results" };
   }
 });
-// Patch route for updating result checks
 router.patch("/result/:id", async (ctx) => {
   const { id } = ctx.params;
   const { firstCheck, secondCheck } = ctx.request.body;
@@ -75,9 +78,18 @@ router.patch("/result/:id", async (ctx) => {
       data: {
         firstCheck,
         secondCheck,
-        archivedAt: firstCheck && secondCheck ? new Date() : null,
       },
     });
+
+    if (secondCheck) {
+      await prisma.result.update({
+        where: { id: Number(id) },
+        data: {
+          archivedAt: new Date(),
+        },
+      });
+    }
+
     ctx.body = result;
   } catch (error: unknown) {
     console.error("Failed to update result:", error);
@@ -101,17 +113,21 @@ router.post("/result", async (ctx) => {
   });
 
   if (existData) {
-    ctx.status = 400;
-    ctx.body = "This ticket is already exist in database";
+    ctx.status = 402;
+    ctx.body = {
+      message: "This ticket is already exist in database",
+    };
     return;
   }
 
   const {
+    account,
     ticket,
     tp,
     sl,
     pair,
     lot,
+    openPrice,
     closePrice,
     reason,
     difference,
@@ -121,9 +137,11 @@ router.post("/result", async (ctx) => {
   try {
     const savedResult = await prisma.result.create({
       data: {
+        account,
         ticket,
         pair,
         lot: parseFloat(lot),
+        openPrice: parseFloat(openPrice),
         tp: parseFloat(tp),
         sl: parseFloat(sl),
         closePrice: parseFloat(closePrice),
@@ -145,9 +163,17 @@ router.post("/result", async (ctx) => {
   }
 });
 
+async function generateReport(filter: string | string[]) {}
+
+// router.get("/report", async (ctx) => {
+//   const { filter } = ctx.query;
+//   const report = await generateReport(filter);
+//   ctx.body = report;
+// });
 // Use routes
 app.use(cors());
 app.use(router.routes());
+app.use(routes);
 app.use(router.allowedMethods());
 
 const port = process.env.PORT || 3000;

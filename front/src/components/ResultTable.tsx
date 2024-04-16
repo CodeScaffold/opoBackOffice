@@ -1,100 +1,107 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   Checkbox,
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
 } from "@mui/material";
 
-interface Row {
+interface ResultDataType {
   id: number;
+  account: number;
   ticket: string;
   pair: string;
   lot: number;
+  openPrice: number;
   tp: number;
   sl: number;
   closePrice: number;
   reason: string;
+  commend: string;
   difference: number;
   compensate: number;
   firstCheck: boolean;
   secondCheck: boolean;
+  archivedAt?: string;
 }
 
-async function fetchResults(page) {
+const fetchResults = async (page: number): Promise<ResultDataType[]> => {
   const response = await fetch(`http://localhost:3000/result?page=${page}`);
-  if (!response.ok) throw new Error("Network response was not ok");
-  return response.json();
-}
-function ResultTable({ results, isLoading }) {
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
   }
+  return await response.json();
+};
 
-  if (!results) {
-    return <div>No results found.</div>;
-  }
-  const ResultTable = () => {
-    const [page, setPage] = useState(1);
-    const { isLoading, error, data } = useQuery({
-      queryKey: ["results", page],
-      queryFn: () => fetchResults(page),
+const ResultTable = () => {
+  const [page, setPage] = useState(1);
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["results", page],
+    queryFn: () => fetchResults(page),
+  });
+  const [results, setResults] = useState<ResultDataType[]>([]);
+  const [totalResultsCount, setTotalResultsCount] = useState(0);
+
+  useEffect(() => {
+    if (data?.results) {
+      setResults(data.results);
+      setTotalResultsCount(data.totalResultsCount);
+    }
+  }, [data]);
+
+  const handleChangeCheck = async (
+    id: number,
+    field: "firstCheck" | "secondCheck",
+  ) => {
+    const updatedResults = results.map((item) => {
+      if (item.id === id) {
+        return { ...item, [field]: !item[field] };
+      }
+      return item;
     });
-
-    const handleChangeCheck = async (
-      id: number,
-      field: "firstCheck" | "secondCheck",
-    ) => {
-      // Optimistically update the UI
-      const newData = data.map((item) => {
-        if (item.id === id) {
-          return { ...item, [field]: !item[field] };
-        }
-        return item;
-      });
-    };
-    if (isLoading) return <p>Loading...</p>;
-    if (error instanceof Error)
-      return <p>An error has occurred: {error.message}</p>;
-
-    setData(newData);
+    setResults(updatedResults);
     try {
       await fetch(`http://localhost:3000/result/${id}`, {
-        method: "PATCH", // Assuming your backend supports PATCH requests
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          [field]: newData.find((item) => item.id === id)[field],
+          [field]: updatedResults.find((item) => item.id === id)[field],
         }),
       });
-      // Optionally, refetch data here to ensure UI consistency
+      if (!response.ok) throw new Error("Failed to update the item");
     } catch (error) {
       console.error("Error updating item:", error);
-      // Rollback in case of error
-      setData(data);
+      // Optionally, revert changes on error
     }
   };
 
-  if (data?.length === 0) return null;
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <p>An error has occurred: {error.message}</p>;
+  if (results.length === 0) return <p>No data found.</p>;
+
   return (
     <>
       <TableContainer component={Paper}>
-        <Table>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
+              <TableCell>Account</TableCell>
               <TableCell>Ticket</TableCell>
               <TableCell>Pair</TableCell>
               <TableCell>Lot</TableCell>
+              <TableCell>Open Price</TableCell>
               <TableCell>T/P</TableCell>
               <TableCell>S/L</TableCell>
               <TableCell>Close Price</TableCell>
               <TableCell>Reason</TableCell>
+              <TableCell>commend</TableCell>
               <TableCell>Difference</TableCell>
               <TableCell>Compensate in USD</TableCell>
               <TableCell>First Check</TableCell>
@@ -102,20 +109,23 @@ function ResultTable({ results, isLoading }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((row) => (
+            {results.map((row: ResultDataType) => (
               <TableRow
                 key={row.id}
-                style={{
-                  display: row.firstCheck && row.secondCheck ? "none" : "",
-                }}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
+                <TableCell component="th" scope="row">
+                  {row.account}
+                </TableCell>
                 <TableCell>{row.ticket}</TableCell>
                 <TableCell>{row.pair}</TableCell>
                 <TableCell>{row.lot}</TableCell>
+                <TableCell>{row.openPrice}</TableCell>
                 <TableCell>{row.tp}</TableCell>
                 <TableCell>{row.sl}</TableCell>
                 <TableCell>{row.closePrice}</TableCell>
                 <TableCell>{row.reason}</TableCell>
+                <TableCell>{row.commend}</TableCell>
                 <TableCell>{row.difference.toFixed(2)}</TableCell>
                 <TableCell>{row.compensate.toFixed(2)}</TableCell>
                 <TableCell>
@@ -140,11 +150,20 @@ function ResultTable({ results, isLoading }) {
           onClick={() => setPage((old) => Math.max(old - 1, 1))}
           disabled={page === 1}
         >
-          Previous Page
+          Previous
         </button>
-        <button onClick={() => setPage((old) => old + 1)}>Next Page</button>
+        <button
+          onClick={() =>
+            setPage((old) =>
+              Math.min(old + 1, Math.ceil(totalResultsCount / 10)),
+            )
+          }
+          disabled={page === Math.ceil(totalResultsCount / 10)}
+        >
+          Next
+        </button>
       </div>
     </>
   );
-}
+};
 export default ResultTable;
