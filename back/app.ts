@@ -1,7 +1,7 @@
 import Koa from "koa";
 import Router from "@koa/router";
 import cors from "@koa/cors";
-import { prisma } from "./src/database";
+import { prisma } from "@database";
 import koaBody from "koa-body";
 import serve from "koa-static";
 import path from "path";

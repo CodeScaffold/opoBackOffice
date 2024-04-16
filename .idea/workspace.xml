@@ -4,61 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7ba849dd-a7d3-45be-a277-d33d58e215e7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/back/src/auth/passport.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/back/src/middleware/auth.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/back/src/routes/account.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/back/src/routes/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/back/src/routes/login.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front/src/components/Form.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front/src/components/MainPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front/src/components/Report.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front/src/hooks/auth/index.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front/src/settings.ts" afterDir="false" />
+    <list default="true" id="7ba849dd-a7d3-45be-a277-d33d58e215e7" name="Changes" comment="Nasty">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/back/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/back/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/back/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/back/prisma/schema.prisma" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/back/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/back/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_joy_Input.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_joy_Input.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_joy_Stack.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_joy_Stack.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_FormControl.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_FormControl.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_InputLabel.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_InputLabel.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_MenuItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_MenuItem.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_Select.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_Select.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/_metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/_metadata.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/chunk-36LWTR24.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/chunk-36LWTR24.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/chunk-BVG3VJQY.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/chunk-BVG3VJQY.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/chunk-DBVL7M3Q.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/chunk-DBVL7M3Q.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/chunk-KMOKKZQP.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/chunk-KMOKKZQP.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/chunk-PPQ6JERZ.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/chunk-PPQ6JERZ.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/chunk-SFFJVITU.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/chunk-SFFJVITU.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/chunk-U52ZDFQN.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/chunk-U52ZDFQN.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/chunk-VJWR4V54.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/chunk-VJWR4V54.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/chunk-W6VTSEPC.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/chunk-W6VTSEPC.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/front/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/front/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/src/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/Login.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/src/Reason.ts" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/Reason.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/src/components/ResultTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/ResultTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/src/components/draft.ts" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,7 +89,25 @@
       <workItem from="1712582906930" duration="21074000" />
       <workItem from="1712834780795" duration="20980000" />
       <workItem from="1713099363433" duration="21051000" />
+      <workItem from="1713279187752" duration="386000" />
     </task>
+    <task id="LOCAL-00001" summary="first version.">
+      <option name="closed" value="true" />
+      <created>1713279411599</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1713279411599</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Nasty">
+      <option name="closed" value="true" />
+      <created>1713279485774</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1713279485774</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -148,6 +115,24 @@
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName=".env" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
+    <MESSAGE value="first version." />
+    <MESSAGE value="Nasty" />
+    <option name="LAST_COMMIT_MESSAGE" value="Nasty" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
