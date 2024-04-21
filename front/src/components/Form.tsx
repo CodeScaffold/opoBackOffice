@@ -5,6 +5,7 @@ import { Commends, Reasons } from "../Reason.ts";
 import ResultTable from "./ResultTable.tsx";
 import { useState } from "react";
 import { useSnackbar } from "notistack";
+import Filtered from "./filtered.tsx";
 
 const Form = () => {
   const [Account, setAccount] = useState("");
@@ -14,28 +15,42 @@ const Form = () => {
   const [tp, setTp] = useState("");
   const [sl, setSl] = useState("");
   const [closePrice, setClosePrice] = useState("");
+  // const [closeTimeDate, setcloseTimeDate] = useState("");
   const [pair, setPair] = useState("");
   const [inputString, setInputString] = useState("");
   const [reason, setReason] = useState("");
   const [commend, setCommend] = useState("");
   const [differenceValue, setDifferenceValue] = useState(0);
   const [totalPriceValue, setTotalPriceValue] = useState(0);
+  const [priceAtDate, setPriceAtDate] = useState<any>(null);
 
   const { enqueueSnackbar } = useSnackbar();
-
   const handleSubmit = async () => {
     if (!lot || !closePrice) {
-      alert("Error: Lot and Close Price are required.");
+      enqueueSnackbar("Error: Lot and Close Price are required.", {
+        variant: "error",
+      });
       return;
     }
     if (!sl && !tp) {
-      alert("Error: Either S/L or T/P must be provided.");
+      enqueueSnackbar("Error: Either S/L or T/P must be provided.", {
+        variant: "error",
+      });
+      return;
+    }
+
+    if (+sl === 0 && +tp === 0) {
+      enqueueSnackbar("TL and SL can't be both 0.", {
+        variant: "error",
+      });
       return;
     }
 
     const selectedPair = Pairs.find((p) => p.name === pair);
     if (!selectedPair) {
-      console.error("Selected pair not found.");
+      enqueueSnackbar("Selected pair not found.", {
+        variant: "error",
+      });
       return;
     }
     let conversionRate = 1;
@@ -43,7 +58,11 @@ const Form = () => {
     if (selectedPair.apiName) {
       try {
         const response = await fetch(
-          //'https://fcsapi.com/api-v3/forex/history?id=1&period=1h&access_key=access_key=DsBQp33PeVHJfrWhP3chmSWWf`,
+          //'https://fcsapi.com/api-v3/forex/history?symbol=${encodeURIComponent(
+          //             selectedPair.apiName,
+          //             &period=1d&from=2023-10-01T12:00
+          //             &to=2024-04-17T12:00
+          //             &access_key=access_key=DsBQp33PeVHJfrWhP3chmSWWf`,
 
           `https://fcsapi.com/api-v3/forex/latest?symbol=${encodeURIComponent(
             selectedPair.apiName,
@@ -58,11 +77,15 @@ const Form = () => {
         ) {
           conversionRate = parseFloat(data.response[0].c);
         } else {
-          console.error("Failed to fetch conversion rate.");
+          enqueueSnackbar("Failed to fetch conversion rate.", {
+            variant: "error",
+          });
           return;
         }
       } catch (error) {
-        console.error("Error fetching conversion rate:", error);
+        enqueueSnackbar("Error fetching conversion rate.", {
+          variant: "error",
+        });
         return;
       }
     }
@@ -70,7 +93,9 @@ const Form = () => {
     try {
       pip = selectedPair.contractSize * parseFloat(lot) * selectedPair.tickSize;
     } catch (error) {
-      console.error("Error calculating pip:", error);
+      enqueueSnackbar("Error calculating pip.", {
+        variant: "error",
+      });
       return;
     }
 
@@ -87,16 +112,19 @@ const Form = () => {
     try {
       if (closePrice) {
         const closePriceValue = +closePrice;
-        if (sl) {
+        if (sl && +sl !== 0) {
           difference = Math.abs(closePriceValue - +sl);
-        } else if (tp) {
+        } else if (tp && +tp !== 0) {
           difference = Math.abs(closePriceValue - +tp);
         }
       }
     } catch (error) {
-      console.error("Error calculating difference:", error);
+      enqueueSnackbar("Error calculating difference.", {
+        variant: "error",
+      });
       return;
     }
+
     const finalDifference = difference / selectedPair.tickSize;
     setDifferenceValue(finalDifference);
     setTotalPriceValue(finalDifference * pipUSDValue);
@@ -116,6 +144,7 @@ const Form = () => {
           lot: lot,
           openPrice: OpenPrice,
           closePrice: closePrice,
+          // closeTimeDate: closeTimeDate,
           reason: reason,
           commend: commend,
           difference: finalDifference,
@@ -128,7 +157,6 @@ const Form = () => {
       }
       await response.json();
     } catch (error: any) {
-      alert(error);
       enqueueSnackbar(error, { variant: "default" });
     }
   };
@@ -144,9 +172,19 @@ const Form = () => {
     const parsedPair = parts[1].replace(/[\.\#\!]/g, ""); // Remove ., #, !
     const parsedLot = parts[3];
     const parsedOpenPrice = parts[6];
-    const parsedTp = parts[7]; // Assuming the T/P and S/L values are the same in this format
-    const parsedSl = parts[8]; // Duplicate of T/P for this example
+    const parsedTp = parts[7];
+    const parsedSl = parts[8];
+    // const ParsedcloseTimeDate = parts[9];
+    // const priceAtTime = parts[10];
     const parsedClosePrice = parts[11];
+
+    const handleChangeReason = (event) => {
+      setReason(event.target.value);
+    };
+
+    const handleChangeCommend = (event) => {
+      setCommend(event.target.value);
+    };
 
     // Update form fields
     setAccount(parsedAccount);
@@ -157,6 +195,8 @@ const Form = () => {
     setTp(parsedTp);
     setSl(parsedSl);
     setClosePrice(parsedClosePrice);
+    // setcloseTimeDate(ParsedcloseTimeDate);
+    // setPriceAtDate({ date: closeTimeDate, time: priceAtTime });
   };
   return (
     <>
@@ -233,7 +273,7 @@ const Form = () => {
           name="Reason"
           options={Reasons}
           value={reason}
-          onChange={setReason}
+          onChange={(newValue) => setReason(newValue)}
           required
         />
         <DropDown
@@ -252,6 +292,7 @@ const Form = () => {
         <p>Compensate in USD: {totalPriceValue.toFixed(2)}</p>
       </div>
       <ResultTable />
+      <Filtered />
     </>
   );
 };

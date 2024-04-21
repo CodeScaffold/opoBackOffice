@@ -1,7 +1,7 @@
+import { prisma } from "./src/database";
 import Koa from "koa";
 import Router from "@koa/router";
 import cors from "@koa/cors";
-import { prisma } from "@database";
 import koaBody from "koa-body";
 import serve from "koa-static";
 import path from "path";
@@ -10,6 +10,7 @@ import passport from "koa-passport";
 import dotenv from "dotenv";
 import setupPassport from "./src/auth/passport";
 import routes from "./src/routes";
+import { Prisma } from "@prisma/client";
 
 dotenv.config();
 
@@ -30,44 +31,82 @@ app.use(
 );
 
 app.use(bodyParser());
-require("./src/auth/passport"); // This will run the code in your passport.ts
+require("./src/auth/passport");
 app.use(passport.initialize());
 
-// Define routes
 router.get("/", async (ctx) => {
   ctx.body = "Hello, Koa!";
 });
 
-// Define a route for fetching results
+// router.get("/results", (req, res) => {
+//   const paginate = req.query.paginate;
+//   if (paginate === "false") {
+//     res.json({
+//       results: getAllResults(),
+//       totalResultsCount: getTotalResultsCount(),
+//     });
+//   } else {
+//     res.json({
+//       results: getPaginatedResults(req.query.page),
+//       totalResultsCount: getTotalResultsCount(),
+//     });
+//   }
+// });
 
 router.get("/result", async (ctx) => {
+  const paginate = ctx.query.paginate === "false" ? false : true; // Check if pagination is to be disabled
   const page = parseInt(ctx.query.page as string) || 1;
   const pageSize = parseInt(ctx.query.pageSize as string) || 10;
+
+  const {
+    account,
+    ticket,
+    pair,
+    // closeTimeDate,
+    Reason: reason,
+    Compensate: compensate,
+  } = ctx.query;
+
+  const includeArchived = ctx.query.includeArchived === "true";
   const skip = (page - 1) * pageSize;
+
+  const whereClause: Prisma.ResultWhereInput = {
+    ...(includeArchived ? {} : { archivedAt: null }),
+    ...(account
+      ? { account: { contains: String(account), mode: "insensitive" } }
+      : {}),
+    ...(ticket
+      ? { ticket: { contains: String(ticket), mode: "insensitive" } }
+      : {}),
+    ...(pair ? { pair: { contains: String(pair), mode: "insensitive" } } : {}),
+
+    ...(reason ? { reason: reason as Prisma.Reasons } : {}),
+    ...(compensate ? { compensate: parseFloat(compensate as string) } : {}),
+    // ...(closeTimeDate
+    //   ? { : { equals: new Date(closeTimeDate) } }
+    //   : {}),
+  };
+
   try {
     const [results, totalResultsCount] = await Promise.all([
       prisma.result.findMany({
-        where: {
-          archivedAt: null,
-        },
-        skip: skip,
+        where: whereClause,
+        skip,
         take: pageSize,
         orderBy: [{ id: "desc" }],
       }),
-      prisma.result.count({
-        where: {
-          archivedAt: null,
-        },
-      }),
+      prisma.result.count({ where: whereClause }),
     ]);
-
     ctx.body = { results, totalResultsCount };
   } catch (error) {
-    console.error("Error fetching results:", error);
     ctx.status = 500;
-    ctx.body = { error: "Failed to fetch results" };
+    ctx.body = {
+      error: "Server Error",
+      details: error instanceof Error ? error.message : "Unknown error",
+    };
   }
 });
+
 router.patch("/result/:id", async (ctx) => {
   const { id } = ctx.params;
   const { firstCheck, secondCheck } = ctx.request.body;
@@ -106,14 +145,14 @@ router.post("/result", async (ctx) => {
     return;
   }
 
-  const existData = await prisma.result.findUnique({
+  const existingData = await prisma.result.findUnique({
     where: {
       ticket: ctx.request.body.ticket,
     },
   });
 
-  if (existData) {
-    ctx.status = 402;
+  if (existingData) {
+    ctx.status = 409;
     ctx.body = {
       message: "This ticket is already exist in database",
     };
@@ -129,7 +168,9 @@ router.post("/result", async (ctx) => {
     lot,
     openPrice,
     closePrice,
+    // closeTimeDate,
     reason,
+    commend,
     difference,
     compensateInUsd,
   } = ctx.request.body;
@@ -145,7 +186,9 @@ router.post("/result", async (ctx) => {
         tp: parseFloat(tp),
         sl: parseFloat(sl),
         closePrice: parseFloat(closePrice),
+        // closeTimeDate: parseFloat(closeTimeDate),
         reason,
+        commend,
         difference,
         compensate: compensateInUsd,
       },
@@ -165,12 +208,6 @@ router.post("/result", async (ctx) => {
 
 async function generateReport(filter: string | string[]) {}
 
-// router.get("/report", async (ctx) => {
-//   const { filter } = ctx.query;
-//   const report = await generateReport(filter);
-//   ctx.body = report;
-// });
-// Use routes
 app.use(cors());
 app.use(router.routes());
 app.use(routes);

@@ -22,9 +22,11 @@ const ReportSection = ({ reportFilter }: { reportFilter: string }) => {
                 const data = await response.json();
                 setReportData(data);
             } catch (error) {
-                console.error('Failed to fetch report:', error);
+                enqueueSnackbar("Failed to fetch.", {
+                    variant: "error",
+                });
+                return;
             }
-        };
 
         fetchReport();
     }, [reportFilter]);

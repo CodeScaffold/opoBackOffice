@@ -41,6 +41,7 @@ model Result {
   tp          Float?
   sl          Float?
   closePrice  Float?
+  // closeTimeDate DateTime?
   reason      Reasons?
   commend     Commends?
   difference  Float?
