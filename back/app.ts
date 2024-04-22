@@ -11,8 +11,17 @@ import dotenv from "dotenv";
 import setupPassport from "./src/auth/passport";
 import routes from "./src/routes";
 import { Prisma } from "@prisma/client";
-
 dotenv.config();
+
+function getDayRange(date: any): { start: Date; end: Date } {
+  let start = new Date(date);
+  start.setHours(0, 0, 0, 0);
+
+  let end = new Date(date);
+  end.setHours(23, 59, 59, 999);
+
+  return { start, end };
+}
 
 const app = new Koa();
 const router = new Router();
@@ -38,37 +47,24 @@ router.get("/", async (ctx) => {
   ctx.body = "Hello, Koa!";
 });
 
-// router.get("/results", (req, res) => {
-//   const paginate = req.query.paginate;
-//   if (paginate === "false") {
-//     res.json({
-//       results: getAllResults(),
-//       totalResultsCount: getTotalResultsCount(),
-//     });
-//   } else {
-//     res.json({
-//       results: getPaginatedResults(req.query.page),
-//       totalResultsCount: getTotalResultsCount(),
-//     });
-//   }
-// });
-
 router.get("/result", async (ctx) => {
-  const paginate = ctx.query.paginate === "false" ? false : true; // Check if pagination is to be disabled
+  const paginate = ctx.query.paginate !== "false"; // Determine if pagination is enabled
   const page = parseInt(ctx.query.page as string) || 1;
-  const pageSize = parseInt(ctx.query.pageSize as string) || 10;
+  const pageSize = parseInt(ctx.query.pageSize as string) || 5;
+  let skip = (page - 1) * pageSize; // Calculate 'skip' only once using 'let'
 
-  const {
-    account,
-    ticket,
-    pair,
-    // closeTimeDate,
-    Reason: reason,
-    Compensate: compensate,
-  } = ctx.query;
+  const { account, ticket, pair, closeTimeDate, reason, compensate } =
+    ctx.query;
 
   const includeArchived = ctx.query.includeArchived === "true";
-  const skip = (page - 1) * pageSize;
+  let parseClosedTime;
+  if (typeof closeTimeDate === "string") {
+    parseClosedTime = new Date(closeTimeDate);
+  }
+
+  const { start: closedTimeStart, end: closedTimeEnd } = getDayRange(
+    new Date(parseClosedTime || new Date()),
+  );
 
   const whereClause: Prisma.ResultWhereInput = {
     ...(includeArchived ? {} : { archivedAt: null }),
@@ -80,23 +76,27 @@ router.get("/result", async (ctx) => {
       : {}),
     ...(pair ? { pair: { contains: String(pair), mode: "insensitive" } } : {}),
 
-    ...(reason ? { reason: reason as Prisma.Reasons } : {}),
+    ...(reason ? { reason: { equals: reason as any } } : {}),
     ...(compensate ? { compensate: parseFloat(compensate as string) } : {}),
-    // ...(closeTimeDate
-    //   ? { : { equals: new Date(closeTimeDate) } }
-    //   : {}),
+    ...(closeTimeDate
+      ? {
+          closeTimeDate: {
+            gte: closedTimeStart,
+            lte: closedTimeEnd,
+          },
+        }
+      : {}),
   };
 
   try {
-    const [results, totalResultsCount] = await Promise.all([
-      prisma.result.findMany({
-        where: whereClause,
-        skip,
-        take: pageSize,
-        orderBy: [{ id: "desc" }],
-      }),
-      prisma.result.count({ where: whereClause }),
-    ]);
+    const results = await prisma.result.findMany({
+      where: whereClause,
+      skip: paginate ? skip : 0, // Use 'skip' based on pagination status
+      take: paginate ? pageSize : undefined, // Use 'pageSize' or fetch all if not paginating
+      orderBy: { id: "desc" },
+    });
+    const totalResultsCount = await prisma.result.count({ where: whereClause });
+
     ctx.body = { results, totalResultsCount };
   } catch (error) {
     ctx.status = 500;

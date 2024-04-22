@@ -32,23 +32,23 @@ model User {
 }
 
 model Result {
-  id          Int       @id @default(autoincrement())
-  account     String?
-  ticket      String?
-  pair        String?
-  lot         Float?
-  openPrice   Float?
-  tp          Float?
-  sl          Float?
-  closePrice  Float?
-  // closeTimeDate DateTime?
-  reason      Reasons?
-  commend     Commends?
-  difference  Float?
-  compensate  Float?
-  firstCheck  Boolean   @default(false)
-  secondCheck Boolean   @default(false)
-  archivedAt  DateTime?
+  id            Int       @id @default(autoincrement())
+  account       String?
+  ticket        String?
+  pair          String?
+  lot           Float?
+  openPrice     Float?
+  tp            Float?
+  sl            Float?
+  closePrice    Float?
+  closeTimeDate DateTime?
+  reason        Reasons?
+  commend       Commends?
+  difference    Float?
+  compensate    Float?
+  firstCheck    Boolean   @default(false)
+  secondCheck   Boolean   @default(false)
+  archivedAt    DateTime?
 
   @@unique([ticket])
 }

@@ -16,10 +16,14 @@ import {
   CardContent,
   Skeleton,
   MenuItem,
-  select,
+  Typography,
 } from "@mui/material";
 import { Reasons } from "../Reason.ts";
 import { exportToCSV } from "../utils/utils";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 interface ResultDataType {
   id: number;
@@ -108,12 +112,22 @@ const Filtered = () => {
     if (data?.results) {
       setResults(data.results);
       setTotalResultsCount(data.totalResultsCount);
+      const total = data.results.reduce(
+        (acc, curr) => acc + (curr.compensate || 0),
+        0,
+      );
+      setTotalCompensation(total);
     }
   }, [data]);
 
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
     setFilters((prev) => ({ ...prev, [name]: value, page: 1 }));
+  };
+
+  const handleDateChange = (newValue: Dayjs | null) => {
+    const formattedDate = newValue ? newValue.format("YYYY/MM/DD") : "";
+    setFilters((prev) => ({ ...prev, closeTimeDate: formattedDate, page: 1 }));
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -124,6 +138,10 @@ const Filtered = () => {
     <>
       <Card raised sx={{ margin: 2 }}>
         <CardContent>
+          {/* Display the total compensation */}
+          <Typography variant="h6" gutterBottom>
+            Total Compensation: {totalCompensation.toFixed(2)} USD
+          </Typography>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -167,14 +185,15 @@ const Filtered = () => {
                     />
                   </TableCell>
                   <TableCell>
-                    <TextField
-                      size="small"
-                      variant="outlined"
-                      name="Date"
-                      value={filters.closeTimeDate || ""}
-                      onChange={handleFilterChange}
-                      placeholder="Filter Date"
-                    />
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        label="Date desktop"
+                        value={filters.date}
+                        onChange={handleDateChange}
+                        name="date"
+                        TextField={(params) => <TextField {...params} />}
+                      />
+                    </LocalizationProvider>
                   </TableCell>
                   <TableCell>
                     <TextField
@@ -191,11 +210,16 @@ const Filtered = () => {
                         Choose a reason
                       </MenuItem>
                       {Reasons.map((reason) => (
-                        <MenuItem key={reason.name} value={reason.name}>
-                          {reason.value}
+                        <MenuItem key={reason.name} value={reason.value}>
+                          {reason.name}
                         </MenuItem>
                       ))}
                     </TextField>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2" style={{ paddingTop: 8 }}>
+                      Total: {totalCompensation.toFixed(2)} $
+                    </Typography>
                   </TableCell>
                   <TableCell />
                 </TableRow>

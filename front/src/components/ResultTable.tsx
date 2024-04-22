@@ -16,6 +16,12 @@ import {
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { API_URL } from "../settings.ts";
+import { Commends, Reasons } from "../Reason.ts";
+
+function getNameFromValue(value, Array) {
+  const item = Array.find((reason) => reason.value === value);
+  return item ? item.name : "Unknown Reason"; // Returns "Unknown Reason" if no match is found
+}
 
 interface ResultDataType {
   id: number;
@@ -78,12 +84,27 @@ const ResultTable: React.FC = () => {
   const handleExportAllToCSV = async () => {
     try {
       const allData = await fetchAllResults();
-      exportToCSV(allData.results, "AllResults");
+
+      // Map each result to replace the 'reason' value with its corresponding 'name'
+      const updatedResults = allData.results.map((result) => {
+        const foundReason = Reasons.find(
+          (reason) => reason.value === result.reason,
+        );
+        const foundCommend = Commends.find(
+          (commend) => commend.value === result.commend,
+        );
+        return {
+          ...result,
+          reason: foundReason ? foundReason.name : "Unknown Reason",
+          commend: foundCommend ? foundCommend.name : "Unknown Commend",
+        };
+      });
+
+      exportToCSV(updatedResults, "AllResults");
     } catch (error) {
       console.error("Failed to fetch all results for export:", error);
     }
   };
-
   const handleChangeCheck = async (id, field) => {
     const tempResults = results.map((item) => {
       if (item.id === id) {
@@ -176,8 +197,12 @@ const ResultTable: React.FC = () => {
                     {/*<TableCell>{row.tp}</TableCell>*/}
                     {/*<TableCell>{row.sl}</TableCell>*/}
                     {/*<TableCell>{row.closePrice}</TableCell>*/}
-                    <TableCell>{row.reason}</TableCell>
-                    <TableCell>{row.commend}</TableCell>
+                    <TableCell>
+                      {getNameFromValue(row.reason, Reasons)}
+                    </TableCell>
+                    <TableCell>
+                      {getNameFromValue(row.commend, Commends)}
+                    </TableCell>
                     <TableCell>{row.difference.toFixed(2)}</TableCell>
                     <TableCell>{row.compensate.toFixed(2)}</TableCell>
                     <TableCell>
@@ -201,13 +226,16 @@ const ResultTable: React.FC = () => {
             </Table>
           </TableContainer>
           <div style={{ marginTop: "20px" }}>
-            <button
+            <Button
+              color="primary"
               onClick={() => setPage((old) => Math.max(old - 1, 1))}
               disabled={page === 1}
+              style={{ marginRight: 8 }}
             >
               Previous
-            </button>
-            <button
+            </Button>
+            <Button
+              color="primary"
               onClick={() =>
                 setPage((old) =>
                   Math.min(old + 1, Math.ceil(totalResultsCount / 10)),
@@ -216,7 +244,7 @@ const ResultTable: React.FC = () => {
               disabled={page === Math.ceil(totalResultsCount / 10)}
             >
               Next
-            </button>
+            </Button>
           </div>
         </CardContent>
         <Button
