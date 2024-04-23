@@ -4,19 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7ba849dd-a7d3-45be-a277-d33d58e215e7" name="Changes" comment="fixing date and reason filtered">
+    <list default="true" id="7ba849dd-a7d3-45be-a277-d33d58e215e7" name="Changes" comment="before adding sidebar">
+      <change afterPath="$PROJECT_DIR$/front/src/Mini-drawer.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/InputSection.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/back/app.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_FormControl.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_FormControl.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_Input.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_Input.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_InputLabel.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_InputLabel.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_MenuItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_MenuItem.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_Select.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_Select.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_Stack.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_Stack.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/_metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/_metadata.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/src/components/Form.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/Form.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/src/components/ResultTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/ResultTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/src/components/filtered.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/filtered.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/components/Report.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/Report.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,8 +29,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JavaScript File" />
-        <option value="TypeScript JSX File" />
         <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -77,9 +79,9 @@
       <recent name="$PROJECT_DIR$/../opo back office2/src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/front/src" />
       <recent name="$PROJECT_DIR$/front/src/utils" />
       <recent name="$PROJECT_DIR$/front/src/components" />
-      <recent name="$PROJECT_DIR$/front/src" />
       <recent name="$PROJECT_DIR$/back/src" />
       <recent name="$PROJECT_DIR$/back/src/routes" />
     </key>
@@ -106,7 +108,7 @@
       <workItem from="1713441254103" duration="34704000" />
       <workItem from="1713535884293" duration="1026000" />
       <workItem from="1713719752728" duration="17335000" />
-      <workItem from="1713773129880" duration="14962000" />
+      <workItem from="1713773129880" duration="26904000" />
     </task>
     <task id="LOCAL-00001" summary="first version.">
       <option name="closed" value="true" />
@@ -148,7 +150,15 @@
       <option name="project" value="LOCAL" />
       <updated>1713791345206</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="before adding sidebar">
+      <option name="closed" value="true" />
+      <created>1713858354305</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1713858354305</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -176,7 +186,8 @@
     <MESSAGE value="fix config.ts" />
     <MESSAGE value="no bug 22 apr" />
     <MESSAGE value="fixing date and reason filtered" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixing date and reason filtered" />
+    <MESSAGE value="before adding sidebar" />
+    <option name="LAST_COMMIT_MESSAGE" value="before adding sidebar" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -185,6 +196,17 @@
           <url>file://$PROJECT_DIR$/src/App.tsx</url>
           <line>8</line>
           <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/front/src/components/Form.tsx</url>
+          <line>209</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/front/src/Mini-drawer.tsx</url>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
