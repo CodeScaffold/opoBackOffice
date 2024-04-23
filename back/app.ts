@@ -168,12 +168,17 @@ router.post("/result", async (ctx) => {
     lot,
     openPrice,
     closePrice,
-    // closeTimeDate,
+    closeTimeDate,
     reason,
     commend,
     difference,
     compensateInUsd,
   } = ctx.request.body;
+
+  let dateToSave;
+  if (typeof closeTimeDate === "string") {
+    dateToSave = new Date(closeTimeDate);
+  }
 
   try {
     const savedResult = await prisma.result.create({
@@ -186,7 +191,7 @@ router.post("/result", async (ctx) => {
         tp: parseFloat(tp),
         sl: parseFloat(sl),
         closePrice: parseFloat(closePrice),
-        // closeTimeDate: parseFloat(closeTimeDate),
+        closeTimeDate: dateToSave,
         reason,
         commend,
         difference,

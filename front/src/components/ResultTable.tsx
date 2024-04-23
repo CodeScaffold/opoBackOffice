@@ -33,7 +33,7 @@ interface ResultDataType {
   tp: number;
   sl: number;
   closePrice: number;
-  closeTimeDate?: string;
+  closeTimeDate: number;
   reason: string;
   commend: string;
   difference: number;

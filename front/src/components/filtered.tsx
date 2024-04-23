@@ -18,13 +18,17 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
-import { Reasons } from "../Reason.ts";
+import { Commends, Reasons } from "../Reason.ts";
 import { exportToCSV } from "../utils/utils";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
+import moment from "moment";
 
+function getNameFromValue(value, Array) {
+  const item = Array.find((reason) => reason.value === value);
+  return item ? item.name : "Unknown Reason"; // Returns "Unknown Reason" if no match is found
+}
 interface ResultDataType {
   id: number;
   account: number;
@@ -35,7 +39,7 @@ interface ResultDataType {
   tp: number;
   sl: number;
   closePrice: number;
-  closeTimeDate: string;
+  closeTimeDate: number;
   reason: string;
   commend: string;
   difference: number;
@@ -104,8 +108,22 @@ const Filtered = () => {
   const [totalResultsCount, setTotalResultsCount] = useState(0);
 
   const handleExportToCSV = async () => {
-    const allData = await fetchAllFilteredResults(filters);
-    exportToCSV(allData.results, "FilteredResults");
+    try {
+      const allData = await fetchAllFilteredResults();
+      const updatedResults = allData.results.map((result) => {
+        const foundReason = Reasons.find(
+          (reason) => reason.value === result.reason,
+        );
+        return {
+          ...result,
+          reason: foundReason ? foundReason.name : "Unknown Reason",
+        };
+      });
+
+      exportToCSV(updatedResults, "FilteredResults");
+    } catch (error) {
+      console.error("Failed to fetch all results for export:", error);
+    }
   };
 
   useEffect(() => {
@@ -187,7 +205,7 @@ const Filtered = () => {
                   <TableCell>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DatePicker
-                        label="Date desktop"
+                        label="Date"
                         value={filters.date}
                         onChange={handleDateChange}
                         name="date"
@@ -260,8 +278,14 @@ const Filtered = () => {
                         </TableCell>
                         <TableCell>{row.ticket}</TableCell>
                         <TableCell>{row.pair}</TableCell>
-                        <TableCell>{row.closeTimeDate}</TableCell>
-                        <TableCell>{row.reason}</TableCell>
+                        <TableCell>
+                          {row.closeTimeDate
+                            ? moment(row.closeTimeDate).format("YYYY/MM/DD")
+                            : "No Date Available"}
+                        </TableCell>
+                        <TableCell>
+                          {getNameFromValue(row.reason, Reasons)}
+                        </TableCell>
                         <TableCell>{`${row.compensate.toFixed(2)} USD`}</TableCell>
                       </TableRow>
                     ))}

@@ -6,6 +6,9 @@ import ResultTable from "./ResultTable.tsx";
 import { useState } from "react";
 import { useSnackbar } from "notistack";
 import Filtered from "./filtered.tsx";
+import HistoryIcon from "@mui/icons-material/History";
+import { useAuth } from "../hooks/auth";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const Form = () => {
   const [Account, setAccount] = useState("");
@@ -15,7 +18,7 @@ const Form = () => {
   const [tp, setTp] = useState("");
   const [sl, setSl] = useState("");
   const [closePrice, setClosePrice] = useState("");
-  // const [closeTimeDate, setcloseTimeDate] = useState("");
+  const [closeTimeDate, setcloseTimeDate] = useState("");
   const [pair, setPair] = useState("");
   const [inputString, setInputString] = useState("");
   const [reason, setReason] = useState("");
@@ -23,8 +26,13 @@ const Form = () => {
   const [differenceValue, setDifferenceValue] = useState(0);
   const [totalPriceValue, setTotalPriceValue] = useState(0);
   const [priceAtDate, setPriceAtDate] = useState<any>(null);
-
+  const [showHistory, setShowHistory] = useState<boolean>(true);
   const { enqueueSnackbar } = useSnackbar();
+
+  const { logout } = useAuth();
+  const handleShowHistory = () => {
+    setShowHistory((prev) => !prev);
+  };
   const handleSubmit = async () => {
     if (!lot || !closePrice) {
       enqueueSnackbar("Error: Lot and Close Price are required.", {
@@ -144,7 +152,7 @@ const Form = () => {
           lot: lot,
           openPrice: OpenPrice,
           closePrice: closePrice,
-          // closeTimeDate: closeTimeDate,
+          closeTimeDate: closeTimeDate,
           reason: reason,
           commend: commend,
           difference: finalDifference,
@@ -174,7 +182,7 @@ const Form = () => {
     const parsedOpenPrice = parts[6];
     const parsedTp = parts[7];
     const parsedSl = parts[8];
-    // const ParsedcloseTimeDate = parts[9];
+    const parsedCloseTimeDate = parts[9];
     // const priceAtTime = parts[10];
     const parsedClosePrice = parts[11];
 
@@ -195,11 +203,28 @@ const Form = () => {
     setTp(parsedTp);
     setSl(parsedSl);
     setClosePrice(parsedClosePrice);
-    // setcloseTimeDate(ParsedcloseTimeDate);
+    setcloseTimeDate(parsedCloseTimeDate);
     // setPriceAtDate({ date: closeTimeDate, time: priceAtTime });
   };
   return (
     <>
+      <Stack justifyContent="center" direction="row" spacing={1}>
+        <Button
+          onClick={handleShowHistory}
+          variant={showHistory ? "contained" : "outlined"}
+          startIcon={<HistoryIcon />}
+        >
+          {showHistory ? "Hide" : "Show"} History
+        </Button>
+        <Button
+          onClick={() => logout()}
+          variant={showHistory ? "contained" : "outlined"}
+          startIcon={<LogoutIcon />}
+          color="error"
+        >
+          Logout
+        </Button>
+      </Stack>
       <Card raised sx={{ margin: 2 }}>
         <CardContent>
           <TextField
@@ -296,7 +321,7 @@ const Form = () => {
           </Stack>
 
           <ResultTable />
-          <Filtered />
+          {showHistory && <Filtered />}
         </CardContent>
       </Card>
     </>
