@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import Input from "@mui/material/Input";
 import Stack from "@mui/material/Stack";
 import { useAuth } from "./hooks/auth";
+import { useNavigate } from "react-router-dom";
 
 interface Props {}
 
 const Login: React.FC<Props> = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { login, error } = useAuth();
+  const navigate = useNavigate();
+  const { login, error, isAuth } = useAuth();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -18,6 +20,12 @@ const Login: React.FC<Props> = () => {
       password,
     });
   };
+
+  useEffect(() => {
+    if (isAuth) {
+      navigate("/");
+    }
+  }, [isAuth]);
 
   return (
     <form onSubmit={handleSubmit}>

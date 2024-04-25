@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7ba849dd-a7d3-45be-a277-d33d58e215e7" name="Changes" comment="before adding sidebar">
-      <change afterPath="$PROJECT_DIR$/front/src/Mini-drawer.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front/src/components/InputSection.tsx" afterDir="false" />
+    <list default="true" id="7ba849dd-a7d3-45be-a277-d33d58e215e7" name="Changes" comment="after adding sidebar">
+      <change afterPath="$PROJECT_DIR$/front/src/components/ProtectedRoute.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_FormControl.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_FormControl.js" afterDir="false" />
@@ -17,8 +17,64 @@
       <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_Select.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_Select.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_Stack.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/@mui_material_Stack.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/node_modules/.vite/deps/_metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/.vite/deps/_metadata.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/@remix-run/router/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/@remix-run/router/CHANGELOG.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/index.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/router.cjs.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/router.cjs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/router.cjs.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/router.cjs.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/router.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/router.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/router.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/router.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/router.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/router.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/router.umd.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/router.umd.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/router.umd.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/router.umd.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/router.umd.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/router.umd.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/router.umd.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/router.umd.min.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/utils.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/@remix-run/router/dist/utils.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/@remix-run/router/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/@remix-run/router/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/@remix-run/router/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/@remix-run/router/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/@remix-run/router/router.ts" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/@remix-run/router/router.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/@remix-run/router/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/@remix-run/router/utils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router-dom/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router-dom/CHANGELOG.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/index.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/index.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/index.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/react-router-dom.development.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/react-router-dom.development.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/react-router-dom.development.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/react-router-dom.development.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/react-router-dom.production.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/react-router-dom.production.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/react-router-dom.production.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/react-router-dom.production.min.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/server.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/server.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/server.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/server.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/umd/react-router-dom.development.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/umd/react-router-dom.development.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/umd/react-router-dom.development.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/umd/react-router-dom.development.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/umd/react-router-dom.production.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/umd/react-router-dom.production.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/umd/react-router-dom.production.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router-dom/dist/umd/react-router-dom.production.min.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router-dom/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router-dom/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router-dom/server.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router-dom/server.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router-dom/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router-dom/server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router-dom/server.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router-dom/server.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router/CHANGELOG.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router/dist/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router/dist/index.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router/dist/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router/dist/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router/dist/index.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router/dist/index.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router/dist/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router/dist/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router/dist/react-router.development.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router/dist/react-router.development.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router/dist/react-router.development.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router/dist/react-router.development.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router/dist/react-router.production.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router/dist/react-router.production.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router/dist/react-router.production.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router/dist/react-router.production.min.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router/dist/umd/react-router.development.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router/dist/umd/react-router.development.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router/dist/umd/react-router.development.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router/dist/umd/react-router.development.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router/dist/umd/react-router.production.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router/dist/umd/react-router.production.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router/dist/umd/react-router.production.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router/dist/umd/react-router.production.min.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/node_modules/react-router/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/front/node_modules/react-router/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/front/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/front/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/Login.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/Mini-drawer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/Mini-drawer.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/front/src/components/Form.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/Form.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front/src/components/Report.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/Report.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/components/MainPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/components/MainPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front/src/main.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/front/src/main.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,7 +164,7 @@
       <workItem from="1713441254103" duration="34704000" />
       <workItem from="1713535884293" duration="1026000" />
       <workItem from="1713719752728" duration="17335000" />
-      <workItem from="1713773129880" duration="26904000" />
+      <workItem from="1713773129880" duration="35051000" />
     </task>
     <task id="LOCAL-00001" summary="first version.">
       <option name="closed" value="true" />
@@ -158,7 +214,15 @@
       <option name="project" value="LOCAL" />
       <updated>1713858354305</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="after adding sidebar">
+      <option name="closed" value="true" />
+      <created>1713872712939</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1713872712939</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -187,7 +251,8 @@
     <MESSAGE value="no bug 22 apr" />
     <MESSAGE value="fixing date and reason filtered" />
     <MESSAGE value="before adding sidebar" />
-    <option name="LAST_COMMIT_MESSAGE" value="before adding sidebar" />
+    <MESSAGE value="after adding sidebar" />
+    <option name="LAST_COMMIT_MESSAGE" value="after adding sidebar" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -202,11 +267,6 @@
           <line>209</line>
           <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/front/src/Mini-drawer.tsx</url>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

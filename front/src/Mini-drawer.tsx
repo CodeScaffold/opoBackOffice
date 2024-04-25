@@ -25,7 +25,6 @@ import Filtered from "./components/filtered.tsx";
 import ResultTable from "./components/ResultTable.tsx";
 import { Stack } from "@mui/material";
 import InputSection from "./components/InputSection.tsx";
-import logo from "logo.png";
 
 const drawerWidth = 240;
 
@@ -137,10 +136,10 @@ export default function MiniDrawer() {
           <img
             src="https://opofinance.com/_next/image?url=%2Fimages%2Flogo.png&w=384&q=75"
             alt="Logo"
-            style={{ marginRight: 60, height: "30px" }}
+            style={{ marginRight: 60, height: "70px" }}
           />
           <Typography variant="h6" noWrap>
-            Opofinance Back Office
+            {/*Back Office*/}
           </Typography>
         </Toolbar>
       </AppBar>

@@ -25,7 +25,7 @@ const Form = () => {
   const [differenceValue, setDifferenceValue] = useState(0);
   const [totalPriceValue, setTotalPriceValue] = useState(0);
   const [priceAtDate, setPriceAtDate] = useState<any>(null);
-  const [showHistory, setShowHistory] = useState<boolean>(true);
+  const [showHistory, setShowHistory] = useState<boolean>(false);
   const { enqueueSnackbar } = useSnackbar();
 
   const { logout } = useAuth();

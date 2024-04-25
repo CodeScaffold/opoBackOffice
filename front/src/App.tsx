@@ -1,22 +1,23 @@
 import "./App.css";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SnackbarProvider } from "notistack";
-import { AuthProvider } from "./hooks/auth";
 import MainPage from "./components/MainPage";
 import ThemeComponent from "./ThemeComponent";
+import { Routes, Route } from "react-router-dom";
+import Login from "./Login.tsx";
+import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
 const App = () => {
-  const queryClient = new QueryClient();
-
   return (
     <ThemeComponent>
-      <AuthProvider>
-        <SnackbarProvider maxSnack={3}>
-          <QueryClientProvider client={queryClient}>
-            <MainPage />
-          </QueryClientProvider>
-        </SnackbarProvider>
-      </AuthProvider>
+      <SnackbarProvider maxSnack={3}>
+        <Routes>
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<MainPage />} />
+            <Route path="/kir" element={<div>KIR</div>} />
+          </Route>
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </SnackbarProvider>
     </ThemeComponent>
   );
 };
