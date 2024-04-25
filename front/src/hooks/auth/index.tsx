@@ -46,11 +46,10 @@ export const AuthProvider = ({ children }: any) => {
   const [isAuth, setIsAuth] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
   const [error, setError] = useState(null);
-  const [isLoading, setIsloading] = useState(false);
+  const [isLoading, setIsloading] = useState(true);
   //Check user is login
   React.useEffect(() => {
     if (localStorage.getItem("token")) {
-      setIsloading(true);
       checkLogin().then((resp: any) => {
         if (resp.id) {
           setIsAuth(true);

@@ -5,6 +5,7 @@ import ThemeComponent from "./ThemeComponent";
 import { Routes, Route } from "react-router-dom";
 import Login from "./Login.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import Filtered from "./components/filtered.tsx";
 
 const App = () => {
   return (
@@ -13,7 +14,8 @@ const App = () => {
         <Routes>
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<MainPage />} />
-            <Route path="/kir" element={<div>KIR</div>} />
+            <Route path="/filtered" element={<Filtered />} />
+            <Route path="/test" element={<div>kir to konet</div>} />
           </Route>
           <Route path="/login" element={<Login />} />
         </Routes>

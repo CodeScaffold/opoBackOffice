@@ -1,30 +1,24 @@
-import * as React from "react";
-import { styled, useTheme, Theme, CSSObject } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import MuiDrawer from "@mui/material/Drawer";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
+import React from "react";
 import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import Typography from "@mui/material/Typography";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import LogoutIcon from "@mui/icons-material/Logout";
 import HistoryIcon from "@mui/icons-material/History";
-import "./App.css";
-import { QueryClient } from "@tanstack/react-query";
-import { useAuth } from "./hooks/auth";
-import { useState } from "react";
-import Filtered from "./components/filtered.tsx";
-import ResultTable from "./components/ResultTable.tsx";
-import { Stack } from "@mui/material";
-import InputSection from "./components/InputSection.tsx";
+import ListItemText from "@mui/material/ListItemText";
+import { CSSObject, styled, Theme, useTheme } from "@mui/material/styles";
+import { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar/AppBar";
+import MuiAppBar from "@mui/material/AppBar";
+import MuiDrawer from "@mui/material/Drawer";
+import { useAuth } from "../../hooks/auth";
+import { Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -97,8 +91,11 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MiniDrawer() {
+const MainDrawer = ({ children }: { children: React.ReactNode }) => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
   const [open, setOpen] = React.useState(false);
 
   const handleDrawerOpen = () => {
@@ -108,18 +105,9 @@ export default function MiniDrawer() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
-  let queryClient = new QueryClient();
-  const { logout } = useAuth();
-  const [showHistory, setShowHistory] = useState<boolean>(true);
-  const handleShowHistory = () => {
-    setShowHistory((prev) => !prev);
-  };
-
   return (
     <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar position="fixed" open={open} component="div">
         <Toolbar>
           <IconButton
             color="inherit"
@@ -134,16 +122,16 @@ export default function MiniDrawer() {
             <MenuIcon />
           </IconButton>
           <img
-            src="https://opofinance.com/_next/image?url=%2Fimages%2Flogo.png&w=384&q=75"
+            src="/images/logo.webp"
             alt="Logo"
-            style={{ marginRight: 60, height: "70px" }}
+            onClick={() => navigate("/")}
+            style={{ marginRight: 60, height: "70px", cursor: "pointer" }}
           />
           <Typography variant="h6" noWrap>
             {/*Back Office*/}
           </Typography>
         </Toolbar>
       </AppBar>
-
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
@@ -163,7 +151,7 @@ export default function MiniDrawer() {
                   justifyContent: open ? "initial" : "center",
                   px: 2.5,
                 }}
-                onClick={index % 2 === 0 ? logout : handleShowHistory}
+                onClick={index % 2 === 0 ? logout : () => navigate("filtered")}
               >
                 <ListItemIcon
                   sx={{
@@ -180,12 +168,10 @@ export default function MiniDrawer() {
           ))}
         </List>
       </Drawer>
-      <Stack>
-        <br />
-        <InputSection />
-        <ResultTable />
-        {showHistory && <Filtered />}
-      </Stack>
+      <Box component="div" sx={{ pt: 5 }}>
+        {children}
+      </Box>
     </Box>
   );
-}
+};
+export default MainDrawer;

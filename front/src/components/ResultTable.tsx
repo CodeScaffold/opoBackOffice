@@ -48,16 +48,31 @@ interface ApiResponse {
   totalResultsCount: number;
 }
 
+const getToken = () => {
+  return localStorage.getItem("token");
+};
+
 const fetchResults = async (page: number): Promise<ApiResponse> => {
-  const response = await fetch(`${API_URL}/result?page=${page}`);
+  const token = getToken();
+  const response = await fetch(`${API_URL}/result?page=${page}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   if (!response.ok) {
     throw new Error("Network response was not ok");
   }
   return await response.json();
 };
+
 const fetchAllResults = async (): Promise<ApiResponse> => {
+  const token = getToken();
   const url = `${API_URL}/result?paginate=false`;
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   if (!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`);
   }
