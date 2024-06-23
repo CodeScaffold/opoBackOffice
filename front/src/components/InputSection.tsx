@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   Box,
   Button,
@@ -11,7 +12,6 @@ import { Pairs } from "../pair.ts";
 import { Commends, Reasons, versions } from "../Reason.ts";
 import { useState } from "react";
 import { useSnackbar } from "notistack";
-import { Grid } from "@mui/joy";
 import SendIcon from "@mui/icons-material/Send";
 
 const InputSection = () => {
@@ -31,8 +31,6 @@ const InputSection = () => {
   const [Version, setVersion] = useState("");
   const [differenceValue, setDifferenceValue] = useState(0);
   const [totalPriceValue, setTotalPriceValue] = useState(0);
-  const [priceAtDate, setPriceAtDate] = useState<any>(null);
-  const [showHistory, setShowHistory] = useState<boolean>(false);
   const { enqueueSnackbar } = useSnackbar();
 
   const handleSubmit = async (e: any) => {

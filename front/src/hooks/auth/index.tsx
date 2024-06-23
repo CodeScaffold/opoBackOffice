@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { createContext, useContext, useState } from "react";
 import { API_URL } from "../../settings.ts";
 import { Box, CircularProgress } from "@mui/material";

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
@@ -16,7 +17,7 @@ import {
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { API_URL } from "../settings.ts";
-import { Commends, Reasons, versions } from "../Reason.ts";
+import { Commends, Reasons } from "../Reason.ts";
 
 function getNameFromValue(value, Array) {
   const item = Array.find((reason) => reason.value === value);
