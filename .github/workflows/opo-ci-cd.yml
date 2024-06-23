@@ -25,7 +25,7 @@ jobs:
           cp .env.production .env  # copy production env file
           npm run build
           cd build
-          tar -czf back-build.tar.gz .
+          tar -czf ../back-build.tar.gz .
           cd ..
           tar -czf back-node-modules.tar.gz node_modules prisma
           tar -czf templates.tar.gz -C src templates
