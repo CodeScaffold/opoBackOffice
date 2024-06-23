@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7ba849dd-a7d3-45be-a277-d33d58e215e7" name="Changes" comment="stable version 0.0.0.2">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/back/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/back/.gitignore" afterDir="false" />
-    </list>
+    <list default="true" id="7ba849dd-a7d3-45be-a277-d33d58e215e7" name="Changes" comment="1" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -124,7 +121,7 @@
       <workItem from="1718463235156" duration="8041000" />
       <workItem from="1718693793574" duration="25610000" />
       <workItem from="1718809581988" duration="34746000" />
-      <workItem from="1719153234059" duration="14070000" />
+      <workItem from="1719153234059" duration="14397000" />
     </task>
     <task id="LOCAL-00001" summary="first version.">
       <option name="closed" value="true" />
@@ -310,7 +307,23 @@
       <option name="project" value="LOCAL" />
       <updated>1719170446497</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="1">
+      <option name="closed" value="true" />
+      <created>1719170709575</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1719170709575</updated>
+    </task>
+    <task id="LOCAL-00025" summary="1">
+      <option name="closed" value="true" />
+      <created>1719170823578</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1719170823578</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -342,7 +355,8 @@
     <MESSAGE value="after adding sidebar" />
     <MESSAGE value="stable version 0.0.0.1" />
     <MESSAGE value="stable version 0.0.0.2" />
-    <option name="LAST_COMMIT_MESSAGE" value="stable version 0.0.0.2" />
+    <MESSAGE value="1" />
+    <option name="LAST_COMMIT_MESSAGE" value="1" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
