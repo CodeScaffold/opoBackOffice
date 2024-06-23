@@ -15,7 +15,6 @@ const App = () => {
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<MainPage />} />
             <Route path="/filtered" element={<Filtered />} />
-            <Route path="/test" element={<div>kir to konet</div>} />
           </Route>
           <Route path="/login" element={<Login />} />
         </Routes>

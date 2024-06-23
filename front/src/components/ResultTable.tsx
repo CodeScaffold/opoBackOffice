@@ -16,15 +16,16 @@ import {
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { API_URL } from "../settings.ts";
-import { Commends, Reasons } from "../Reason.ts";
+import { Commends, Reasons, versions } from "../Reason.ts";
 
 function getNameFromValue(value, Array) {
   const item = Array.find((reason) => reason.value === value);
-  return item ? item.name : "Unknown Reason"; // Returns "Unknown Reason" if no match is found
+  return item ? item.name : "Unknown Reason";
 }
 
 interface ResultDataType {
   id: number;
+  clientId: number;
   account: number;
   ticket: string;
   pair: string;
@@ -36,6 +37,7 @@ interface ResultDataType {
   closeTimeDate: number;
   reason: string;
   commend: string;
+  Version: string;
   difference: number;
   compensate: number;
   firstCheck: boolean;
@@ -130,7 +132,7 @@ const ResultTable: React.FC = () => {
 
     const item = tempResults.find((item) => item.id === id);
     try {
-      const response = await fetch(`http://localhost:3000/result/${id}`, {
+      const response = await fetch(`${API_URL}/result/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -185,7 +187,8 @@ const ResultTable: React.FC = () => {
                   {/*<TableCell>Close Price</TableCell>*/}
                   <TableCell>Reason</TableCell>
                   <TableCell>commend</TableCell>
-                  <TableCell>Difference</TableCell>
+                  <TableCell>Version</TableCell>
+                  {/*<TableCell>Difference</TableCell>*/}
                   <TableCell>Compensate</TableCell>
                   <TableCell>First Check</TableCell>
                   <TableCell>Second Check</TableCell>
@@ -218,7 +221,8 @@ const ResultTable: React.FC = () => {
                     <TableCell>
                       {getNameFromValue(row.commend, Commends)}
                     </TableCell>
-                    <TableCell>{row.difference.toFixed(2)}</TableCell>
+                    <TableCell>{row.version}</TableCell>
+                    {/*<TableCell>{row.difference.toFixed(2)}</TableCell>*/}
                     <TableCell>{row.compensate.toFixed(2)}</TableCell>
                     <TableCell>
                       <Checkbox

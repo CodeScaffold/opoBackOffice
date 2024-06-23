@@ -1,12 +1,22 @@
-import { Button, Card, CardContent, Stack, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Stack,
+  TextField,
+} from "@mui/material";
 import DropDown from "./DropDown";
 import { Pairs } from "../pair.ts";
-import { Commends, Reasons } from "../Reason.ts";
+import { Commends, Reasons, versions } from "../Reason.ts";
 import { useState } from "react";
 import { useSnackbar } from "notistack";
+import { Grid } from "@mui/joy";
+import SendIcon from "@mui/icons-material/Send";
 
 const InputSection = () => {
   const [Account, setAccount] = useState("");
+  const [ClientId, setClientId] = useState("");
   const [OpenPrice, setOpenPrice] = useState("");
   const [Ticket, setID] = useState("");
   const [lot, setLot] = useState("");
@@ -18,13 +28,15 @@ const InputSection = () => {
   const [inputString, setInputString] = useState("");
   const [reason, setReason] = useState("");
   const [commend, setCommend] = useState("");
+  const [Version, setVersion] = useState("");
   const [differenceValue, setDifferenceValue] = useState(0);
   const [totalPriceValue, setTotalPriceValue] = useState(0);
   const [priceAtDate, setPriceAtDate] = useState<any>(null);
   const [showHistory, setShowHistory] = useState<boolean>(false);
   const { enqueueSnackbar } = useSnackbar();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
     if (!lot || !closePrice) {
       enqueueSnackbar("Error: Lot and Close Price are required.", {
         variant: "error",
@@ -135,6 +147,7 @@ const InputSection = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          clientId: ClientId,
           account: Account,
           ticket: Ticket,
           tp: tp,
@@ -146,6 +159,7 @@ const InputSection = () => {
           closeTimeDate: closeTimeDate,
           reason: reason,
           commend: commend,
+          version: Version,
           difference: finalDifference,
           compensateInUsd: finalDifference * pipUSDValue,
         }),
@@ -166,6 +180,7 @@ const InputSection = () => {
       console.error("Invalid input format.");
       return;
     }
+    const parsedClientId = parts[13];
     const parsedAccount = parts[12];
     const parsedID = parts[0];
     const parsedPair = parts[1].replace(/[\.\#\!]/g, ""); // Remove ., #, !
@@ -185,7 +200,12 @@ const InputSection = () => {
       setCommend(event.target.value);
     };
 
+    const handleChangeVersion = (event) => {
+      setVersion(event.target.value);
+    };
+
     // Update form fields
+    setClientId(parsedClientId);
     setAccount(parsedAccount);
     setID(parsedID);
     setPair(parsedPair);
@@ -198,11 +218,11 @@ const InputSection = () => {
     // setPriceAtDate({ date: closeTimeDate, time: priceAtTime });
   };
   return (
-    <Card raised sx={{ margin: 2 }}>
+    <Card onSubmit={handleSubmit} component="form" raised sx={{ margin: 2 }}>
       <CardContent>
         <TextField
           fullWidth
-          label="Input String"
+          label="Input format : Ticket , Symbol ,Type , Lots , Open Time , Open Price , T/P , S/L , Close Time , Account , Client ID "
           variant="outlined"
           value={inputString}
           onChange={(e) => {
@@ -211,84 +231,110 @@ const InputSection = () => {
           }}
           sx={{ mb: 2 }}
         />
-        <Stack direction="row" spacing={1}>
-          <TextField
-            type="number"
-            id="account"
-            label="Account"
-            variant="outlined"
-            value={Account}
-            onChange={(e) => setAccount(e.target.value)}
-          />
-          <TextField
-            type="number"
-            id="Ticket"
-            label="Ticket"
-            variant="outlined"
-            value={Ticket}
-            onChange={(e) => setID(e.target.value)}
-          />
-          <DropDown
-            name="Pair"
-            options={Pairs}
-            value={pair}
-            onChange={setPair}
-          />
-          <TextField
-            type="number"
-            id="lot"
-            label="Lot"
-            variant="outlined"
-            value={lot}
-            onChange={(e) => setLot(e.target.value)}
-          />
-          <TextField
-            type="number"
-            id="openPrice"
-            label="Open Price"
-            variant="outlined"
-            value={OpenPrice}
-            onChange={(e) => setOpenPrice(e.target.value)}
-          />
-          <TextField
-            type="number"
-            id="tp"
-            label="T/P"
-            variant="outlined"
-            value={tp}
-            onChange={(e) => setTp(e.target.value)}
-          />
-          <TextField
-            type="number"
-            id="sl"
-            label="S/L"
-            variant="outlined"
-            value={sl}
-            onChange={(e) => setSl(e.target.value)}
-          />
-          <TextField
-            type="number"
-            id="closePrice"
-            label="Close Price"
-            variant="outlined"
-            value={closePrice}
-            onChange={(e) => setClosePrice(e.target.value)}
-          />
-          <DropDown
-            name="Reason"
-            options={Reasons}
-            value={reason}
-            onChange={(newValue) => setReason(newValue)}
-            required
-          />
-          <DropDown
-            name="Commend"
-            options={Commends}
-            value={commend}
-            onChange={setCommend}
-            required
-          />
-          <Button sx={{ mt: 2 }} variant="contained" onClick={handleSubmit}>
+        <Stack spacing={2} direction="row">
+          <Box component="div">
+            <Stack direction="row" spacing={1}>
+              <TextField
+                type="number"
+                id="ClientId"
+                label="Client Id"
+                variant="outlined"
+                value={ClientId}
+                onChange={(e) => setClientId(e.target.value)}
+              />
+              <TextField
+                type="number"
+                id="account"
+                label="Account"
+                variant="outlined"
+                value={Account}
+                onChange={(e) => setAccount(e.target.value)}
+              />
+              <TextField
+                type="number"
+                id="Ticket"
+                label="Ticket"
+                variant="outlined"
+                value={Ticket}
+                onChange={(e) => setID(e.target.value)}
+              />
+              <DropDown
+                name="Pair"
+                options={Pairs}
+                value={pair}
+                onChange={setPair}
+              />
+              <TextField
+                type="number"
+                id="lot"
+                label="Lot"
+                variant="outlined"
+                value={lot}
+                onChange={(e) => setLot(e.target.value)}
+              />
+              <TextField
+                type="number"
+                id="openPrice"
+                label="Open Price"
+                variant="outlined"
+                value={OpenPrice}
+                onChange={(e) => setOpenPrice(e.target.value)}
+              />
+            </Stack>
+            <Stack sx={{ mt: 1 }} direction="row" spacing={1}>
+              <TextField
+                type="number"
+                id="tp"
+                label="T/P"
+                variant="outlined"
+                value={tp}
+                onChange={(e) => setTp(e.target.value)}
+              />
+              <TextField
+                type="number"
+                id="sl"
+                label="S/L"
+                variant="outlined"
+                value={sl}
+                onChange={(e) => setSl(e.target.value)}
+              />
+              <TextField
+                type="number"
+                id="closePrice"
+                label="Close Price"
+                variant="outlined"
+                value={closePrice}
+                onChange={(e) => setClosePrice(e.target.value)}
+              />
+              <DropDown
+                name="Reason"
+                options={Reasons}
+                value={reason}
+                onChange={(newValue) => setReason(newValue)}
+                required
+              />
+              <DropDown
+                name="Commend"
+                options={Commends}
+                value={commend}
+                onChange={setCommend}
+                required
+              />
+              <DropDown
+                name="version"
+                options={versions}
+                value={Version}
+                onChange={setVersion}
+                required
+              />
+            </Stack>
+          </Box>
+          <Button
+            startIcon={<SendIcon />}
+            sx={{ mt: 2 }}
+            variant="contained"
+            type="submit"
+          >
             Submit
           </Button>
         </Stack>

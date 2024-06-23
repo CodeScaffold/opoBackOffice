@@ -2,32 +2,39 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "../database";
 import Router from "@koa/router";
 import { jwtAuthMiddleware } from "../middleware/auth";
-import { getDayRange } from "../functions";
+import { convertDate } from "../functions";
 
 const results = new Router();
 const auth = jwtAuthMiddleware();
 
 results.get("/result", auth, async (ctx) => {
-  const paginate = ctx.query.paginate !== "false"; // Determine if pagination is enabled
+  const paginate = ctx.query.paginate !== "false";
   const page = parseInt(ctx.query.page as string) || 1;
   const pageSize = parseInt(ctx.query.pageSize as string) || 5;
-  let skip = (page - 1) * pageSize; // Calculate 'skip' only once using 'let'
+  let skip = (page - 1) * pageSize;
 
-  const { account, ticket, pair, closeTimeDate, reason, compensate } =
-    ctx.query;
+  const {
+    clientId,
+    account,
+    ticket,
+    pair,
+    closeTimeDate,
+    startDate,
+    endDate,
+    reason,
+    compensate,
+  } = ctx.query;
+
+  const start = String(startDate);
+  const end = String(endDate);
 
   const includeArchived = ctx.query.includeArchived === "true";
-  let parseClosedTime;
-  if (typeof closeTimeDate === "string") {
-    parseClosedTime = new Date(closeTimeDate);
-  }
-
-  const { start: closedTimeStart, end: closedTimeEnd } = getDayRange(
-    new Date(parseClosedTime || new Date()),
-  );
 
   const whereClause: Prisma.ResultWhereInput = {
-    ...(includeArchived ? {} : { archivedAt: null }),
+    ...(includeArchived ? { archivedAt: { not: null } } : { archivedAt: null }),
+    ...(clientId
+      ? { clientId: { contains: String(clientId), mode: "insensitive" } }
+      : {}),
     ...(account
       ? { account: { contains: String(account), mode: "insensitive" } }
       : {}),
@@ -35,14 +42,13 @@ results.get("/result", auth, async (ctx) => {
       ? { ticket: { contains: String(ticket), mode: "insensitive" } }
       : {}),
     ...(pair ? { pair: { contains: String(pair), mode: "insensitive" } } : {}),
-
     ...(reason ? { reason: { equals: reason as any } } : {}),
     ...(compensate ? { compensate: parseFloat(compensate as string) } : {}),
-    ...(closeTimeDate
+    ...(startDate && endDate
       ? {
           closeTimeDate: {
-            gte: closedTimeStart,
-            lte: closedTimeEnd,
+            gte: new Date(convertDate(start)),
+            lte: new Date(convertDate(end)),
           },
         }
       : {}),
@@ -51,12 +57,11 @@ results.get("/result", auth, async (ctx) => {
   try {
     const results = await prisma.result.findMany({
       where: whereClause,
-      skip: paginate ? skip : 0, // Use 'skip' based on pagination status
-      take: paginate ? pageSize : undefined, // Use 'pageSize' or fetch all if not paginating
+      skip: paginate ? skip : 0,
+      take: paginate ? pageSize : undefined,
       orderBy: { id: "desc" },
     });
     const totalResultsCount = await prisma.result.count({ where: whereClause });
-
     ctx.body = { results, totalResultsCount };
   } catch (error) {
     ctx.status = 500;
@@ -121,6 +126,7 @@ results.post("/result", async (ctx) => {
   }
 
   const {
+    clientId,
     account,
     ticket,
     tp,
@@ -134,6 +140,7 @@ results.post("/result", async (ctx) => {
     commend,
     difference,
     compensateInUsd,
+    version,
   } = ctx.request.body as any;
 
   let dateToSave;
@@ -144,6 +151,7 @@ results.post("/result", async (ctx) => {
   try {
     const savedResult = await prisma.result.create({
       data: {
+        clientId,
         account,
         ticket,
         pair,
@@ -157,6 +165,7 @@ results.post("/result", async (ctx) => {
         commend,
         difference,
         compensate: compensateInUsd,
+        version,
       },
     });
     ctx.status = 200;
@@ -170,6 +179,20 @@ results.post("/result", async (ctx) => {
     ctx.status = 500;
     ctx.body = { error: "Failed to save data", details: message };
   }
+});
+
+results.put("/ticket/:id", async (ctx) => {
+  await prisma.result.update({
+    where: { id: +ctx.params.id },
+    data: {
+      archivedAt: null,
+      firstCheck: false,
+      secondCheck: false,
+    },
+  });
+  ctx.body = {
+    message: "Done",
+  };
 });
 
 export default results;

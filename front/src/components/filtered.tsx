@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
 import "../App.css";
 import {
@@ -18,19 +18,23 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
-import { Commends, Reasons } from "../Reason.ts";
+import { Reasons } from "../Reason.ts";
 import { exportToCSV } from "../utils/utils";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs, { Dayjs } from "dayjs";
 import moment from "moment";
+import IconButton from "@mui/material/IconButton";
+import UnarchiveIcon from "@mui/icons-material/Unarchive";
+import { enqueueSnackbar } from "notistack";
+import axios from "axios";
+import { API_URL } from "../settings.ts";
+import DateRangePickerComponent from "./common/DatePicker.tsx";
 
 function getNameFromValue(value, Array) {
   const item = Array.find((reason) => reason.value === value);
-  return item ? item.name : "Unknown Reason"; // Returns "Unknown Reason" if no match is found
+  return item ? item.name : "Unknown Reason";
 }
 interface ResultDataType {
   id: number;
+  clientId: number;
   account: number;
   ticket: string;
   pair: string;
@@ -42,6 +46,7 @@ interface ResultDataType {
   closeTimeDate: number;
   reason: string;
   commend: string;
+  Version: string;
   difference: number;
   compensate: number;
   firstCheck: boolean;
@@ -61,11 +66,20 @@ interface FetchFilters {
   [key: string]: any;
 }
 
+const getToken = () => {
+  return localStorage.getItem("token");
+};
+
 const fetchFilteredResults = async (
   filters: Record<string, any>,
 ): Promise<{ results: ResultDataType[]; totalResultsCount: number }> => {
+  const token = getToken();
   const queryParams = new URLSearchParams(filters).toString();
-  const response = await fetch(`http://localhost:3000/result?${queryParams}`);
+  const response = await fetch(`${API_URL}/result?${queryParams}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
@@ -75,9 +89,14 @@ const fetchFilteredResults = async (
 const fetchAllFilteredResults = async (
   filters: FetchFilters,
 ): Promise<ApiResponse> => {
+  const token = getToken();
   const exportFilters: FetchFilters = { ...filters, paginate: false };
   const queryParams = new URLSearchParams(exportFilters as any).toString();
-  const response = await fetch(`http://localhost:3000/result?${queryParams}`);
+  const response = await fetch(`${API_URL}/result?${queryParams}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
@@ -109,7 +128,7 @@ const Filtered = () => {
 
   const handleExportToCSV = async () => {
     try {
-      const allData = await fetchAllFilteredResults();
+      const allData = await fetchAllFilteredResults(filters);
       const updatedResults = allData.results.map((result) => {
         const foundReason = Reasons.find(
           (reason) => reason.value === result.reason,
@@ -143,20 +162,49 @@ const Filtered = () => {
     setFilters((prev) => ({ ...prev, [name]: value, page: 1 }));
   };
 
-  const handleDateChange = (newValue: Dayjs | null) => {
-    const formattedDate = newValue ? newValue.format("YYYY/MM/DD") : "";
-    setFilters((prev) => ({ ...prev, closeTimeDate: formattedDate, page: 1 }));
+  const handleDateChange = (newStartDate, newEndDate) => {
+    const formattedStartDate = newStartDate
+      ? moment(newStartDate).format("YYYY/MM/DD")
+      : "";
+    const formattedEndDate = newEndDate
+      ? moment(newEndDate).format("YYYY/MM/DD")
+      : "";
+    setFilters((prev) => ({
+      ...prev,
+      startDate: formattedStartDate,
+      endDate: formattedEndDate,
+      page: 1,
+    })); // Set the filters correctly.
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  const { mutate } = useMutation({
+    mutationFn: (id: number) => axios.put(`${API_URL}/ticket/${id}`, {}),
+    onError: (error) => {
+      console.error("Error updating ticket:", error);
+      enqueueSnackbar("There was an error updating the ticket", {
+        variant: "error",
+      });
+    },
+  });
+
+  const handleUnArchive = (id: number) => () => {
+    mutate(id, {
+      onSuccess: () => {
+        const f = results.filter((i: any) => i.id !== id);
+        setResults(f);
+        enqueueSnackbar("UnArchive was successful", {
+          variant: "success",
+        });
+      },
+    });
+  };
+
   if (error) return <p>An error has occurred: {error.message}</p>;
-  if (results.length === 0) return <p>No data found.</p>;
 
   return (
     <>
       <Card raised sx={{ margin: 2 }}>
         <CardContent>
-          {/* Display the total compensation */}
           <Typography variant="h6" gutterBottom>
             Total Compensation: {totalCompensation.toFixed(2)} USD
           </Typography>
@@ -164,6 +212,7 @@ const Filtered = () => {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
+                  <TableCell>Client ID</TableCell>
                   <TableCell>Account</TableCell>
                   <TableCell>Ticket</TableCell>
                   <TableCell>Pair</TableCell>
@@ -176,10 +225,20 @@ const Filtered = () => {
                     <TextField
                       size="small"
                       variant="outlined"
+                      name="clientId"
+                      value={filters.clientId || ""}
+                      onChange={handleFilterChange}
+                      placeholder="Id"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      size="small"
+                      variant="outlined"
                       name="account"
                       value={filters.account || ""}
                       onChange={handleFilterChange}
-                      placeholder="Filter Account"
+                      placeholder="Account"
                     />
                   </TableCell>
                   <TableCell>
@@ -189,7 +248,7 @@ const Filtered = () => {
                       name="ticket"
                       value={filters.ticket || ""}
                       onChange={handleFilterChange}
-                      placeholder="Filter Ticket"
+                      placeholder="Ticket"
                     />
                   </TableCell>
                   <TableCell>
@@ -199,19 +258,20 @@ const Filtered = () => {
                       name="pair"
                       value={filters.pair || ""}
                       onChange={handleFilterChange}
-                      placeholder="Filter Pair"
+                      placeholder="Pair"
                     />
                   </TableCell>
                   <TableCell>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker
-                        label="Date"
-                        value={filters.date}
-                        onChange={handleDateChange}
-                        name="date"
-                        TextField={(params) => <TextField {...params} />}
-                      />
-                    </LocalizationProvider>
+                    <DateRangePickerComponent onDateChange={handleDateChange} />
+                    {/*<LocalizationProvider dateAdapter={AdapterDayjs}>*/}
+                    {/*  <DatePicker*/}
+                    {/*    label="Date"*/}
+                    {/*    value={filters.date}*/}
+                    {/*    onChange={handleDateChange}*/}
+                    {/*    name="date"*/}
+                    {/*    TextField={(params) => <TextField {...params} />}*/}
+                    {/*  />*/}
+                    {/*</LocalizationProvider>*/}
                   </TableCell>
                   <TableCell>
                     <TextField
@@ -221,7 +281,7 @@ const Filtered = () => {
                       name="reason"
                       value={filters.reason || ""}
                       onChange={handleFilterChange}
-                      label="Filter Reason"
+                      label="Reason"
                       fullWidth
                     >
                       <MenuItem value="" disabled>
@@ -243,56 +303,73 @@ const Filtered = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {isLoading
-                  ? Array.from(new Array(5)).map((_, index) => (
-                      <TableRow key={index}>
-                        <TableCell>
-                          <Skeleton variant="text" width="100%" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton variant="text" width="100%" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton variant="text" width="100%" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton variant="text" width="100%" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton variant="text" width="60%" />
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  : data.results.map((row: ResultDataType) => (
-                      <TableRow
-                        key={row.id}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                          "&:hover": {
-                            backgroundColor: "rgba(255, 255, 255, 0.08)",
-                          },
-                        }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {row.account}
-                        </TableCell>
-                        <TableCell>{row.ticket}</TableCell>
-                        <TableCell>{row.pair}</TableCell>
-                        <TableCell>
-                          {row.closeTimeDate
-                            ? moment(row.closeTimeDate).format("YYYY/MM/DD")
-                            : "No Date Available"}
-                        </TableCell>
-                        <TableCell>
-                          {getNameFromValue(row.reason, Reasons)}
-                        </TableCell>
-                        <TableCell>{`${row.compensate.toFixed(2)} USD`}</TableCell>
-                      </TableRow>
-                    ))}
+                {results.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} align="center">
+                      No Result Found
+                    </TableCell>
+                  </TableRow>
+                ) : isLoading ? (
+                  Array.from(new Array(5)).map((_, index) => (
+                    <TableRow key={index}>
+                      <TableCell>
+                        <Skeleton variant="text" width="100%" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton variant="text" width="100%" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton variant="text" width="100%" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton variant="text" width="100%" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton variant="text" width="60%" />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  results?.map((row: ResultDataType) => (
+                    <TableRow
+                      key={row.id}
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                        "&:hover": {
+                          backgroundColor: "rgba(255, 255, 255, 0.08)",
+                        },
+                      }}
+                    >
+                      <TableCell>{row.clientId}</TableCell>
+                      <TableCell component="th" scope="row">
+                        {row.account}
+                      </TableCell>
+                      <TableCell>{row.ticket}</TableCell>
+                      <TableCell>{row.pair}</TableCell>
+                      <TableCell>
+                        {row.closeTimeDate
+                          ? moment(row.closeTimeDate).format("YYYY/MM/DD")
+                          : "No Date Available"}
+                      </TableCell>
+                      <TableCell>
+                        {getNameFromValue(row.reason, Reasons)}
+                      </TableCell>
+                      <TableCell>{`${row.compensate.toFixed(2)} USD`}</TableCell>
+                      <TableCell>
+                        <IconButton
+                          onClick={handleUnArchive(row.id)}
+                          aria-label="unarchive"
+                        >
+                          <UnarchiveIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </TableContainer>
-          <div style={{ marginTop: "20px" }}>
+          <TableBody style={{ marginTop: "20px" }}>
             <Button
               onClick={() =>
                 setFilters((old) => ({
@@ -310,15 +387,17 @@ const Filtered = () => {
                   ...old,
                   page: Math.min(
                     old.page + 1,
-                    Math.ceil(data.totalResultsCount / 10),
+                    Math.ceil(data?.totalResultsCount / 10),
                   ),
                 }))
               }
-              disabled={filters.page === Math.ceil(data.totalResultsCount / 10)}
+              disabled={
+                filters.page === Math.ceil(data?.totalResultsCount / 10)
+              }
             >
               Next
             </Button>
-          </div>
+          </TableBody>
         </CardContent>
         <Button
           onClick={handleExportToCSV}

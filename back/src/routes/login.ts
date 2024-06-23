@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { User as PrismaUser } from "@prisma/client";
 import { prisma } from "../database";
 import * as process from "process";
+import moment from "moment-timezone";
 
 const router = new Router();
 
@@ -39,8 +40,23 @@ router.post("/login", async (ctx: Koa.Context, next: Koa.Next) => {
         email: user.email,
       };
       const secret = process.env.JWT_SECRET;
-      const token = jwt.sign(payload, secret!, { expiresIn: "30d" });
+      const token = jwt.sign(payload, secret!, { expiresIn: "7d" });
       const { id, email } = user;
+      await prisma.log.create({
+        data: {
+          userId: id,
+          action: "login",
+          timestamp: moment().tz("Europe/Istanbul").toDate(), // Set to Europe/Istanbul
+          details: `User ${email} logged in`,
+        },
+      });
+      async function getLogs() {
+        const logs = await prisma.log.findMany();
+        return logs.map((log) => ({
+          ...log,
+          timestamp: moment(log.timestamp).tz("Europe/Istanbul").format(), // Convert to GMT+3 upon retrieval
+        }));
+      }
       ctx.body = { user: { id, email }, token };
     },
   )(ctx, next);

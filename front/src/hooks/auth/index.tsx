@@ -61,6 +61,8 @@ export const AuthProvider = ({ children }: any) => {
         }
         setIsloading(false);
       });
+    } else {
+      setIsloading(false);
     }
   }, []);
 
