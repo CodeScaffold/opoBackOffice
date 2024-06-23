@@ -22,7 +22,7 @@ jobs:
         run: |
           cd back
           npm install
-          cp .env .env  # copy production env file
+          cp back/.env .env  # copy production env file
           npm run build
           cd build
           tar -czf back-build.tar.gz .
