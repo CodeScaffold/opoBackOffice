@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7ba849dd-a7d3-45be-a277-d33d58e215e7" name="Changes" comment="stable version 0.0.0.1">
+    <list default="true" id="7ba849dd-a7d3-45be-a277-d33d58e215e7" name="Changes" comment="stable version 0.0.0.2">
       <change afterPath="$PROJECT_DIR$/.github/workflows/opo-ci-cd.yml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/back/src/database/log.ts" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/back/src/serverTypes.ts" afterDir="false" />
@@ -3850,7 +3850,7 @@
       <workItem from="1718463235156" duration="8041000" />
       <workItem from="1718693793574" duration="25610000" />
       <workItem from="1718809581988" duration="34746000" />
-      <workItem from="1719153234059" duration="7910000" />
+      <workItem from="1719153234059" duration="9479000" />
     </task>
     <task id="LOCAL-00001" summary="first version.">
       <option name="closed" value="true" />
@@ -3947,7 +3947,8 @@
     <MESSAGE value="before adding sidebar" />
     <MESSAGE value="after adding sidebar" />
     <MESSAGE value="stable version 0.0.0.1" />
-    <option name="LAST_COMMIT_MESSAGE" value="stable version 0.0.0.1" />
+    <MESSAGE value="stable version 0.0.0.2" />
+    <option name="LAST_COMMIT_MESSAGE" value="stable version 0.0.0.2" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
