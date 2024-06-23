@@ -20,7 +20,7 @@ jobs:
 
       - name: Install and Build Back
         run: |
-          cd var/www/back
+          cd back
           npm install
           cp .env .env  # copy production env file
           npm run build
@@ -32,7 +32,7 @@ jobs:
 
       - name: Install and Build Front
         run: |
-          cd var/www/front
+          cd front
           npm install
           cp .env .env
           npm run build
