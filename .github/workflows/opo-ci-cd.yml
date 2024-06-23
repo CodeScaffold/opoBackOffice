@@ -20,9 +20,9 @@ jobs:
 
       - name: Install and Build Back
         run: |
-          cd back
+          cd ...var/www/back
           npm install
-          cp .env.production .env  # copy production env file
+          cp .env .env  # copy production env file
           npm run build
           cd build
           tar -czf back-build.tar.gz .
@@ -32,9 +32,9 @@ jobs:
 
       - name: Install and Build Front
         run: |
-          cd front
+          cd ...var/www/front
           npm install
-          cp .env.production .env
+          cp .env .env
           npm run build
           tar --exclude=front.tar.gz -czf front.tar.gz .
 
