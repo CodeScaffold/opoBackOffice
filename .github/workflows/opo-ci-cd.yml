@@ -43,7 +43,7 @@ jobs:
           SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
           SERVER_USER: ${{ secrets.SERVER_USER }}
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+
         run: |
           sudo apt-get install -y sshpass
           sshpass -p "$SERVER_PASSWORD" scp back/back-build.tar.gz back/back-node-modules.tar.gz front/front.tar.gz $SERVER_USER@$SERVER_HOST:/tmp
@@ -55,10 +55,10 @@ jobs:
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
         run: |
           sshpass -p "$SERVER_PASSWORD" ssh $SERVER_USER@$SERVER_HOST <<EOF
-            tar -xzf /tmp/back-build.tar.gz -C $DEPLOY_PATH/api
-            tar -xzf /tmp/back-node-modules.tar.gz -C $DEPLOY_PATH/api
-            tar -xzf /tmp/front.tar.gz -C $DEPLOY_PATH/front
-            cd $DEPLOY_PATH/api
+            tar -xzf /tmp/back-build.tar.gz -C /var/www/back/api
+            tar -xzf /tmp/back-node-modules.tar.gz -C /var/www/back/api
+            tar -xzf /tmp/front.tar.gz -C /var/www/front/front
+            cd /var/www/back/api
             npx prisma generate
             npx prisma migrate deploy
             pm2 restart all
