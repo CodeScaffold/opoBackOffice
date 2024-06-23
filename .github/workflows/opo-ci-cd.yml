@@ -22,7 +22,7 @@ jobs:
         run: |
           cd back
           npm install
-          cp .env .env  # copy production env file
+          cp .env.production .env  # copy production env file
           npm run build
           cd build
           tar -czf back-build.tar.gz .
@@ -34,7 +34,7 @@ jobs:
         run: |
           cd front
           npm install
-          cp .env .env
+          cp .env.production .env
           npm run build
           tar --exclude=front.tar.gz -czf front.tar.gz .
 
