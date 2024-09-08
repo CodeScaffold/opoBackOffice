@@ -1,66 +1,66 @@
-name: Deploy Project
+# name: Deploy Project
 
-on:
-  push:
-    branches: [ main ]
-  workflow_dispatch:
+# on:
+#   push:
+#     branches: [ main ]
+#   workflow_dispatch:
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout Repository
+#         uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: '20'
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v1
+#         with:
+#           node-version: '20'
 
-      - name: Install and Build Back
-        run: |
-          cd back
-          npm install
-          cp .env.production .env  # copy production env file
-          npm run build
-          cd build
-          tar -czf ../back-build.tar.gz .
-          cd ..
-          tar -czf back-node-modules.tar.gz node_modules prisma
-          tar -czf templates.tar.gz -C src templates
+#       - name: Install and Build Back
+#         run: |
+#           cd back
+#           npm install
+#           cp .env.production .env  # copy production env file
+#           npm run build
+#           cd build
+#           tar -czf ../back-build.tar.gz .
+#           cd ..
+#           tar -czf back-node-modules.tar.gz node_modules prisma
+#           tar -czf templates.tar.gz -C src templates
 
-      - name: Install and Build Front
-        run: |
-          cd front
-          npm install
-          cp .env.production .env
-          npm run build
-          tar --exclude=front.tar.gz -czf front.tar.gz .
+#       - name: Install and Build Front
+#         run: |
+#           cd front
+#           npm install
+#           cp .env.production .env
+#           npm run build
+#           tar --exclude=front.tar.gz -czf front.tar.gz .
 
-      - name: Deploy to Server
-        env:
-          SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}
-          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+#       - name: Deploy to Server
+#         env:
+#           SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+#           SERVER_USER: ${{ secrets.SERVER_USER }}
+#           SERVER_HOST: ${{ secrets.SERVER_HOST }}
 
-        run: |
-          sudo apt-get install -y sshpass
-          sshpass -p "$SERVER_PASSWORD" scp back/back-build.tar.gz back/back-node-modules.tar.gz front/front.tar.gz $SERVER_USER@$SERVER_HOST:/tmp
+#         run: |
+#           sudo apt-get install -y sshpass
+#           sshpass -p "$SERVER_PASSWORD" scp back/back-build.tar.gz back/back-node-modules.tar.gz front/front.tar.gz $SERVER_USER@$SERVER_HOST:/tmp
 
-      - name: SSH commands
-        env:
-          SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}
-          SERVER_HOST: ${{ secrets.SERVER_HOST }}
-        run: |
-          sshpass -p "$SERVER_PASSWORD" ssh $SERVER_USER@$SERVER_HOST <<EOF
-            tar -xzf /tmp/back-build.tar.gz -C /var/www/back/api
-            tar -xzf /tmp/back-node-modules.tar.gz -C /var/www/back/api
-            tar -xzf /tmp/front.tar.gz -C /var/www/front/front
-            cd /var/www/back/api
-            npx prisma generate
-            npx prisma migrate deploy
-            pm2 restart all
-            sudo nginx -s reload
-          EOF
+#       - name: SSH commands
+#         env:
+#           SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+#           SERVER_USER: ${{ secrets.SERVER_USER }}
+#           SERVER_HOST: ${{ secrets.SERVER_HOST }}
+#         run: |
+#           sshpass -p "$SERVER_PASSWORD" ssh $SERVER_USER@$SERVER_HOST <<EOF
+#             tar -xzf /tmp/back-build.tar.gz -C /var/www/back/api
+#             tar -xzf /tmp/back-node-modules.tar.gz -C /var/www/back/api
+#             tar -xzf /tmp/front.tar.gz -C /var/www/front/front
+#             cd /var/www/back/api
+#             npx prisma generate
+#             npx prisma migrate deploy
+#             pm2 restart all
+#             sudo nginx -s reload
+#           EOF
